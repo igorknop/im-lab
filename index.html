@@ -9,118 +9,42 @@
 
 <body>
     <script type="module">
-        const SIZE = 5;
-        const LINES = 50;
-        const COLUMNS = 60;
-        const D = 8.5; //Diffusion
-        const F = 0.055; //Feed
-        const K = 0.0005; //Decay
-        let MIN = 0.0;
-        let MAX = 1.0;
-        let drawing = false;
-        let dt = 0, to = 0, t = 0, plot = 0;
-        let A = [];
-        let B = [];
-        for (let l = 0; l < LINES; l++) {
-            A[l] = [];
-            B[l] = [];
-            for (let c = 0; c < COLUMNS; c++) {
-                A[l][c] = 0;//Math.random();
-                B[l][c] = 0;
-            }
-        }
-
-        for (let l = LINES / 2; l < LINES / 2 + 3; l++) {
-            for (let c = COLUMNS / 2; c < COLUMNS / 2 + 3; c++) {
-                A[l][c] = 1.0;
-            }
-        }
-
-        A[5][5] = 1.0;
-
-
+        import Map from "./Map.js";
+        const map = new Map();
+        
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
+        map.canvas = canvas;
+        map.ctx = ctx;
         document.body.appendChild(canvas);
-        canvas.width = COLUMNS * SIZE;
-        canvas.height = LINES * SIZE;
-        function draw() {
-            for (let l = 0; l < LINES; l++) {
-                for (let c = 0; c < COLUMNS; c++) {
-                    ctx.fillStyle = `hsl(120,100%,${((A[l][c] - MIN) / (MAX - MIN)) * 100}%)`;
-                    ctx.fillRect(c * SIZE, l * SIZE, SIZE, SIZE);
-                }
-            }
-        }
-        function diffuse(dt) {
-
-            for (let l = 0; l < LINES; l++) {
-                for (let c = 0; c < COLUMNS; c++) {
-                    const a = A[l][c];
-                    B[l][c] = a + (D * laplace(l, c) - K * a) * dt;
-                    if (B[l][c] > MAX) { MAX = B[l][c]; }
-                    if (B[l][c] < MIN) { MIN = B[l][c]; }
-                }
-            }
-        }
-        function swap() {
-            let C = A;
-            A = B;
-            B = C;
-        }
+        canvas.width = map.COLUMNS * map.SIZE;
+        canvas.height = map.LINES * map.SIZE;
 
         function step(t) {
-            dt = (t - to) / 1000;
-            plot -= dt;
-            if (plot < 0) {
-                diffuse(0.02);
-                swap();
-                A[5][5] = 1.0;
-                draw();
-                plot = 0.02;
+            map.dt = (t - map.to) / 1000;
+            map.plot -= map.dt;
+            if (map.plot < 0) {
+                map.diffuse(0.02);
+                map.swap();
+                map.A[5][5] = 1.0;
+                map.draw();
+                map.plot = 0.02;
             }
-            to = t;
+            map.to = t;
             requestAnimationFrame(step);
         }
-
-        function laplace(l, c) {
-            const OC = 0.2;
-            const DC = 0.05
-            let sum = 0;
-            if (l - 1 > 0) sum += A[l - 1][c] * OC;
-            if (l + 1 < LINES) sum += A[l + 1][c] * OC;
-            if (c - 1 > 0) sum += A[l][c - 1] * OC;
-            if (c + 1 < COLUMNS) sum += A[l][c + 1] * OC;
-            if (l - 1 > 0 && c - 1 > 0) sum += A[l - 1][c - 1] * DC;
-            if (l - 1 > 0 && c + 1 < COLUMNS) sum += A[l - 1][c + 1] * DC;
-            if (l + 1 < LINES && c - 1 > 0) sum += A[l + 1][c - 1] * DC;
-            if (l + 1 < LINES && c + 1 < COLUMNS) sum += A[l + 1][c + 1] * DC;
-
-            sum += A[l][c] * -1;
-
-            return sum;
-        }
-
-        function setValue(e) {
-            const box = e.target.getBoundingClientRect();
-            const x = e.clientX - box.left;
-            const y = e.clientY - box.top;
-            const l = Math.floor(y / SIZE);
-            const c = Math.floor(x / SIZE);
-            A[l][c] = 1.0;
-        }
-
+        
         canvas.addEventListener("mousemove", (e) => {
-            if (drawing) {
-                setValue(e);
+            if (map.drawing) {
+                map.setValue(e);
             }
         });
 
         canvas.addEventListener("mousedown", (e) => {
-            drawing = true;
+            map.drawing = true;
         });
         canvas.addEventListener("mouseup", (e) => {
-            drawing = false;
+            map.drawing = false;
         });
         canvas.addEventListener("touchmove", (e) => {
             const touches = e.changedTouches;
@@ -129,12 +53,12 @@
 
                     const touch = touches[key];
           
-                    setValue(touch);
+                    map.setValue(touch);
                 }
             }
         });
 
-        requestAnimationFrame(step);
+       requestAnimationFrame(step);
 
     </script>
 </body>
