@@ -47,7 +47,7 @@
         function draw() {
             for (let l = 0; l < LINES; l++) {
                 for (let c = 0; c < COLUMNS; c++) {
-                    ctx.fillStyle = `hsl(120,100%,${((A[l][c]-MIN)/(MAX-MIN)) * 100}%)`;
+                    ctx.fillStyle = `hsl(120,100%,${((A[l][c] - MIN) / (MAX - MIN)) * 100}%)`;
                     ctx.fillRect(c * SIZE, l * SIZE, SIZE, SIZE);
                 }
             }
@@ -101,14 +101,19 @@
             return sum;
         }
 
+        function setValue(e) {
+            const box = e.target.getBoundingClientRect();
+            const x = e.clientX - box.left;
+            const y = e.clientY - box.top;
+            const l = Math.floor(y / SIZE);
+            const c = Math.floor(x / SIZE);
+            //if (l < 0 || l >= LINES || c < 0 || c >= COLUMNS) return;
+            A[l][c] = 1.0;
+        }
+
         canvas.addEventListener("mousemove", (e) => {
-            if(drawing){
-                const box = e.target.getBoundingClientRect();
-                const x = e.clientX - box.left;
-                const y = e.clientY - box.top;
-                const l = Math.floor(y / SIZE);
-                const c = Math.floor(x / SIZE);
-                A[l][c] = 1.0;
+            if (drawing) {
+                setValue(e);
             }
         });
 
@@ -117,6 +122,17 @@
         });
         canvas.addEventListener("mouseup", (e) => {
             drawing = false;
+        });
+        canvas.addEventListener("touchmove", (e) => {
+            const touches = e.changedTouches;
+            for (const key in touches) {
+                if (touches.hasOwnProperty(key)) {
+
+                    const touch = touches[key];
+          
+                    setValue(touch);
+                }
+            }
         });
 
         requestAnimationFrame(step);
