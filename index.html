@@ -96,7 +96,14 @@
             return sum;
         }
 
-
+        canvas.addEventListener("click",(e)=>{
+            const box = e.target.getBoundingClientRect();
+            const x = e.clientX - box.left;
+            const y = e.clientY - box.top;
+            const l = Math.floor(y/SIZE);
+            const c = Math.floor(x/SIZE);
+            A[l][c] = 1.0;
+        });
 
         requestAnimationFrame(step);
 
