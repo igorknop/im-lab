@@ -12,9 +12,9 @@
         const SIZE = 5;
         const LINES = 50;
         const COLUMNS = 60;
-        const D = 1.5; //Diffusion
-        const F = 0.055;
-        const K = 0.005;
+        const D = 8.5; //Diffusion
+        const F = 0.055; //Feed
+        const K = 0.0005; //Decay
         let MIN = 0.0;
         let MAX = 1.0;
         let drawing = false;
@@ -73,11 +73,11 @@
             dt = (t - to) / 1000;
             plot -= dt;
             if (plot < 0) {
-                diffuse(0.1);
+                diffuse(0.02);
                 swap();
                 A[5][5] = 1.0;
                 draw();
-                plot = 0.2;
+                plot = 0.02;
             }
             to = t;
             requestAnimationFrame(step);
@@ -107,7 +107,6 @@
             const y = e.clientY - box.top;
             const l = Math.floor(y / SIZE);
             const c = Math.floor(x / SIZE);
-            //if (l < 0 || l >= LINES || c < 0 || c >= COLUMNS) return;
             A[l][c] = 1.0;
         }
 
