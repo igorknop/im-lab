@@ -40,7 +40,7 @@ export default class Sprite {
 
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
-        this.ctx.rotate(this.a * Math.PI);
+        this.ctx.rotate(this.a );
         this.ctx.strokeStyle = "blue";
         this.ctx.fillStyle = "white";
         this.ctx.beginPath();

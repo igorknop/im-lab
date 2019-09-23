@@ -6,7 +6,7 @@ export default class Map {
         this.COLUMNS = 60;
         this.D = 10.5; //Diffusion
         this.F = 0.055; //Feed
-        this.K = 0.0000; //Decay
+        this.K = 0.06; //Decay
         this.MIN = 0.0;
         this.MAX = 1.0;
         this.drawing = false;
