@@ -118,4 +118,11 @@ export default class Map {
         return this.A[l][c];
     }
 
+    setValueXY(x, y) {
+        const l = Math.floor(y / this.SIZE);
+        const c = Math.floor(x / this.SIZE);
+        if (l < 0 || l >= this.LINES || c < 0 || c >= this.COLUMNS) return 0.0;
+        return this.A[l][c] = 1.0;
+    }
+
 }

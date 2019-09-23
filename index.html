@@ -14,10 +14,16 @@
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const map = new Map();
+        const NM = 20;
 
         map.canvas = canvas;
         map.ctx = ctx;
-        const spore = new Sprite({ x: 100, y: 100, vm: 0, canvas, ctx, map, behave: behave2 });
+        const spore = []
+        spore.push( new Sprite({ x: 100, y: 100, canvas, ctx, map, behave: behave3, bgcolor: "white", a:-1, /*a: (1 - 2*Math.random())*Math.PI,*/ va:0.3}), );
+        for (let i = 0; i < NM; i++) {
+            spore.push( new Sprite({ x: 200-100*Math.random(), y: 200-100*Math.random(), vm: 0, canvas, ctx, map, behave: behave2 }))
+        }
+
         document.body.appendChild(canvas);
         canvas.width = map.COLUMNS * map.SIZE;
         canvas.height = map.LINES * map.SIZE;
@@ -30,10 +36,12 @@
                 map.swap();
 
                 map.A[5][5] = 1.0;
-                spore.behave();
-                spore.step(map.dt);
                 map.draw();
-                spore.draw();
+                for (let i = 0; i < NM; i++) {
+                    spore[i].behave();
+                    spore[i].step(map.dt);
+                    spore[i].draw();
+                }
                 map.plot = 0.02;
             }
             map.to = t;
@@ -91,6 +99,18 @@
 
 
         }
+
+        function behave3() {
+            if(Math.floor(this.vm)%6 ==0){
+                this.map.setValueXY(this.x, this.y);
+            }
+            if(this.vm < 0){
+                this.vm = 60;
+            }else{
+                this.vm-=0.5;
+            }
+        }
+
 
         requestAnimationFrame(step);
 

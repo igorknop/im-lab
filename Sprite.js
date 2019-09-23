@@ -14,6 +14,7 @@ export default class Sprite {
             f: {s:15, x: 0, y: 0, a: 0 },
             r: {s:10, x: 0, y: 0, a: +0.2 * Math.PI },
         };
+        this.bgcolor= "yellow";
         Object.assign(this, props);
     }
 
@@ -40,9 +41,9 @@ export default class Sprite {
 
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
-        this.ctx.rotate(this.a );
-        this.ctx.strokeStyle = "blue";
-        this.ctx.fillStyle = "white";
+        this.ctx.rotate((this.a +0.5)*Math.PI);
+        this.ctx.strokeStyle = "orange";
+        this.ctx.fillStyle = this.bgcolor;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 5, 0, 2 * Math.PI);
         this.ctx.fill();
