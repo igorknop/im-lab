@@ -10,12 +10,14 @@
 <body>
     <script type="module">
         import Map from "./Map.js";
-        const map = new Map();
-        
+        import Sprite from "./Sprite.js";
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
+        const map = new Map();
+
         map.canvas = canvas;
         map.ctx = ctx;
+        const spore = new Sprite({ x: 100, y: 100, vm: 0, canvas, ctx, map, behave: behave2 });
         document.body.appendChild(canvas);
         canvas.width = map.COLUMNS * map.SIZE;
         canvas.height = map.LINES * map.SIZE;
@@ -26,14 +28,18 @@
             if (map.plot < 0) {
                 map.diffuse(0.02);
                 map.swap();
+
                 map.A[5][5] = 1.0;
+                spore.behave();
+                spore.step(map.dt);
                 map.draw();
+                spore.draw();
                 map.plot = 0.02;
             }
             map.to = t;
             requestAnimationFrame(step);
         }
-        
+
         canvas.addEventListener("mousemove", (e) => {
             if (map.drawing) {
                 map.setValue(e);
@@ -52,13 +58,41 @@
                 if (touches.hasOwnProperty(key)) {
 
                     const touch = touches[key];
-          
+
                     map.setValue(touch);
                 }
             }
         });
 
-       requestAnimationFrame(step);
+        function behave2() {
+            let sf = (this.getSensorXY("f"));
+            let sl = (this.getSensorXY("l"));
+            let sr = (this.getSensorXY("r"));
+
+            let vf = this.map.getValueXY(sf.x, sf.y);
+            let vl = this.map.getValueXY(sl.x, sl.y);
+            let vr = this.map.getValueXY(sr.x, sr.y);
+            //console.log(vl, vf, vr);
+            if (vf > vl && vf > vr) {
+                this.va = 0;
+                this.vm = 20;
+            } else if ((vf < vl) && (vf < vr)) {
+                this.va = 1-2*Math.random();
+                this.vm = 20;
+            } else if (vl < vr) {
+                this.va = +1;
+                this.vm = 0;
+            } else if ((vr < vl)) {
+                this.va = -1;
+                this.vm = 0;
+            } else {
+                this.va = 0;
+            }
+
+
+        }
+
+        requestAnimationFrame(step);
 
     </script>
 </body>

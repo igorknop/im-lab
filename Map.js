@@ -1,12 +1,12 @@
 export default class Map {
-    constructor() {
+    constructor(props) {
         this.SIZE = 5;
         this.LINES = 50;
 
         this.COLUMNS = 60;
-        this.D = 8.5; //Diffusion
+        this.D = 10.5; //Diffusion
         this.F = 0.055; //Feed
-        this.K = 0.0005; //Decay
+        this.K = 0.0000; //Decay
         this.MIN = 0.0;
         this.MAX = 1.0;
         this.drawing = false;
@@ -14,6 +14,8 @@ export default class Map {
         this.to = 0;
         this.t = 0;
         this.plot = 0;
+        Object.assign(this, props);
+
         this.A = [];
         this.B = [];
         for (let l = 0; l < this.LINES; l++) {
@@ -109,5 +111,11 @@ export default class Map {
         this.A[l][c] = 1.0;
     }
 
+    getValueXY(x, y) {
+        const l = Math.floor(y / this.SIZE);
+        const c = Math.floor(x / this.SIZE);
+        if (l < 0 || l >= this.LINES || c < 0 || c >= this.COLUMNS) return 0.0;
+        return this.A[l][c];
+    }
 
 }
