@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html, body{
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+        }
+        canvas{
+            margin: auto auto;
+            border: 3px solid #111;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,6 +30,9 @@
         const ctx = canvas.getContext("2d");
         const map = new Map();
         const NM = 20;
+        document.body.appendChild(canvas);
+        canvas.width = map.COLUMNS * map.SIZE;
+        canvas.height = map.LINES * map.SIZE;
 
         map.canvas = canvas;
         map.ctx = ctx;
@@ -24,9 +42,6 @@
             spore.push( new Sprite({ x: 200-100*Math.random(), y: 200-100*Math.random(), vm: 0, canvas, ctx, map, behave: behave2 }))
         }
 
-        document.body.appendChild(canvas);
-        canvas.width = map.COLUMNS * map.SIZE;
-        canvas.height = map.LINES * map.SIZE;
 
         function step(t) {
             map.dt = (t - map.to) / 1000;

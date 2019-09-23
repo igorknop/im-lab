@@ -1,7 +1,7 @@
 export default class Map {
     constructor(props) {
         this.SIZE = 5;
-        this.LINES = 50;
+        this.LINES = 120;
 
         this.COLUMNS = 60;
         this.D = 10.5; //Diffusion
@@ -34,11 +34,6 @@ export default class Map {
         }
 
         this.A[5][5] = 1.0;
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        document.body.appendChild(canvas);
-        canvas.width = this.COLUMNS * this.SIZE;
-        canvas.height = this.LINES * this.SIZE;
     }
 
 
