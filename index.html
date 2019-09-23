@@ -7,17 +7,18 @@
     <title>Document</title>
     <style>
         html, body{
-            text-align: center;
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
             background-color: black;
+            scroll-behavior: unset;
         }
         canvas{
             margin: auto auto;
             border: 3px solid #111;
+            position: fixed;
         }
     </style>
 </head>
@@ -31,8 +32,8 @@
         const map = new Map();
         const NM = 20;
         document.body.appendChild(canvas);
-        canvas.width = map.COLUMNS * map.SIZE;
-        canvas.height = map.LINES * map.SIZE;
+        canvas.width = window.innerWidth;//map.COLUMNS * map.SIZE;
+        canvas.height = window.innerHeight;//map.LINES * map.SIZE;
 
         map.canvas = canvas;
         map.ctx = ctx;
@@ -44,7 +45,7 @@
 
 
         function step(t) {
-            map.dt = (t - map.to) / 1000;
+            map.dt = Math.max((t - map.to) / 1000,0.020);
             map.plot -= map.dt;
             if (map.plot < 0) {
                 map.diffuse(0.02);

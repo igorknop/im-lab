@@ -3,7 +3,7 @@ export default class Map {
         this.SIZE = 5;
         this.LINES = 120;
 
-        this.COLUMNS = 60;
+        this.COLUMNS = 70;
         this.D = 10.5; //Diffusion
         this.F = 0.055; //Feed
         this.K = 0.06; //Decay
